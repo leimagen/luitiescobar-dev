@@ -13,6 +13,7 @@ const t = useTranslations(lang);
       <span class="footer__copy">© {new Date().getFullYear()} Luiti Escobar</span>
       <a href={localizePath('/cookies', lang)}>{t('footer.cookies')}</a>
       <button type="button" data-cookie-settings>{t('footer.cookieSettings')}</button>
+      <a href="https://github.com/leimagen/luitiescobar-dev" rel="noopener" target="_blank">{t('footer.source')}</a>
     </div>
     <ul>
       <li><a href={lang === 'es' ? `${MAIN_SITE}/es/` : `${MAIN_SITE}/`}>{t('footer.design')}</a></li>

@@ -65,17 +65,17 @@ Dates and commit counts come from `git log` (first and last author date). Resear
 
 | slug | repo(s) | dates | commits | public? |
 |---|---|---|---|---|
-| luitiescobar-com | luitiescobar-portfolio-2026 | 2026-10-15 to 10-19 | 20 | private |
+| luitiescobar-com | luitiescobar-portfolio-2026 | 2026-10-15 to 10-19 | 20 | public |
 | te-para-dos | TeParaDos-Steam (Unity prototype in local `TeParaDos`, not a repo) | 09-26 to 10-02 | 29 | private, itch.io live |
 | study-lab | study-diary-logger | 09-29 to 09-30 | 26 | public + GitHub Pages |
 | diario-de-estudio | diario-de-estudio | 09-30 to 10-01 | 3 | public |
 | abril | abril (v1), abril-v2, abril-v3 | 06-09/06-15, 06-15/06-22, 09-26 | 72+36+3 | private |
 | fwc2026-live | FWC2026 (local `WC2026-Live`) | 06-20 to 06-23 | 25 | public, fwc2026live.com |
-| esco-playground | esco-playground (local `abril-old`) | 06-08 | 8 | private |
+| esco-playground | esco-playground (local `abril-old`) | 06-08 | 8 | public |
 | xfutve | xfutve (local `x-futve`) | 05-22 to 05-25 | 4 | private |
-| gmail-cleaner | gmail-cleaner (local `Gmail Cleaner`) | 05-24 | 1 | private |
+| gmail-cleaner | gmail-cleaner (local `Gmail Cleaner`) | 05-24 | 1 | public |
 | annie | annie-agent | 05-15 to 05-22 | 40 | private |
-| whos-the-jefe | whos-the-jefe | 05-14 to 05-15 | 4 (3 pushed) | private |
+| whos-the-jefe | whos-the-jefe | 05-14 to 05-15 | 4 | public (design doc kept out of git) |
 
 Skipped: `luitiescobar` (old static landing, no dev story; mentioned inside the luitiescobar-com case study).
 
@@ -214,6 +214,6 @@ Always `rm -rf dist` (PowerShell: `Remove-Item -Recurse -Force dist`) before a p
 - [x] User set TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID (2026-10-20). Claude tested 2 live downloads (es, en): 200, rows in D1, Worker outcome ok, no Telegram errors in the logs. User confirmed both messages arrived; counter reset to 0 afterwards (rows deleted)
 - [x] Search Console linked to GA by the user (2026-10-20), via a Domain property luitiescobar.com that covers dev.luitiescobar.com
 - [x] Both sitemaps submitted in the Search Console Domain property (user, 2026-10-20)
-- [x] Repo made public after cleanup (2026-10-20): phone moved to cv/private.mjs, private notes to MEMORY.private.md, history rewritten
+- [x] Repos made public after cleanup (2026-10-20): luitiescobar-dev, luitiescobar-portfolio-2026, whos-the-jefe, esco-playground, gmail-cleaner (+ study-diary-logger history cleaned). History rewritten by the user with a script Claude prepared (Claude's own force pushes are blocked by the permission classifier), verified from fresh clones. Case studies link their code; the footer links this repo.
 - [ ] Optional: refresh the activity grid daily (GitHub Action or Worker cron) instead of on each deploy
 - [x] User review round 1 (2026-10-20): design skills, BIG school course, FWC2026 and Annie in past tense, Abril screenshots

@@ -63,7 +63,7 @@ export const projects: Project[] = [
     role: { en: 'Design, development, content migration', es: 'Diseño, desarrollo, migración de contenido' },
     stack: ['Astro 7', 'Sanity v6', 'Cloudflare Workers', 'D1', 'TypeScript', 'Figma'],
     ai: ['Claude Code', 'Figma MCP', 'Kling AI'],
-    links: [{ label: { en: 'Visit the site', es: 'Ver el sitio' }, href: 'https://luitiescobar.com' }],
+    links: [{ label: { en: 'Visit the site', es: 'Ver el sitio' }, href: 'https://luitiescobar.com' }, { label: code, href: repo('luitiescobar-portfolio-2026') }],
     cover: { src: portfolio, alt: { en: 'Home page of luitiescobar.com', es: 'Portada de luitiescobar.com' } },
     featured: true,
   },
@@ -204,7 +204,7 @@ export const projects: Project[] = [
     role: { en: 'Concept, design, development', es: 'Concepto, diseño, desarrollo' },
     stack: ['Python', 'FastAPI', 'Gmail API', 'SQLite', 'Chrome extension'],
     ai: ['Claude Haiku 4.5', 'Claude Code'],
-    links: [],
+    links: [{ label: code, href: repo('gmail-cleaner') }],
     cover: { src: gmailCleaner, alt: { en: 'Gmail Cleaner logo', es: 'Logo de Gmail Cleaner' }, fit: 'contain' },
   },
   {
@@ -236,7 +236,7 @@ export const projects: Project[] = [
     role: { en: 'Game design, pixel art direction, development', es: 'Diseño de juego, dirección de pixel art, desarrollo' },
     stack: ['Phaser 4', 'JavaScript', 'Python'],
     ai: ['Claude Haiku 4.5'],
-    links: [],
+    links: [{ label: code, href: repo('whos-the-jefe') }],
   },
 ];
 
