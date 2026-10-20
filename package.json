@@ -11,7 +11,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "deploy": "astro build && wrangler deploy",
+    "activity": "node scripts/github-activity.mjs",
+    "deploy": "node scripts/github-activity.mjs && astro build && wrangler deploy",
     "favicon": "node scripts/favicon.mjs",
     "lint:copy": "node scripts/lint-copy.mjs",
     "astro": "astro"

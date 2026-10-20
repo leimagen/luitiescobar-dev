@@ -5,6 +5,7 @@
  */
 import { activeDays, firstCommit, formatDay, projects, totalCommits } from '../data/projects';
 import { getLang, localizePath, useTranslations } from '../i18n/utils';
+import Activity from './Activity.astro';
 
 const lang = getLang(Astro.currentLocale);
 const t = useTranslations(lang);
@@ -31,6 +32,8 @@ const dayWord = (n: number) => `${n} ${n === 1 ? t('timeline.day') : t('timeline
     <p class="timeline__text">{t('timeline.text')}</p>
     <p class="timeline__total label"><strong>{projects.length}</strong> {t('timeline.total', { n: commits })}</p>
   </header>
+
+  <Activity />
 
   <div class="chart">
     <div class="chart__axis" aria-hidden="true">

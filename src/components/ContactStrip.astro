@@ -1,5 +1,6 @@
 ---
 import { email, location } from '../data/profile';
+import ProfileLinks from './ProfileLinks.astro';
 import { getLang, useTranslations } from '../i18n/utils';
 
 const lang = getLang(Astro.currentLocale);
@@ -11,6 +12,7 @@ const t = useTranslations(lang);
   <div class="contact__side">
     <p>{t('contact.text')}</p>
     <a class="contact__mail" href={`mailto:${email}`}>{email}</a>
+    <ProfileLinks />
     <p class="label">{location[lang]}</p>
   </div>
 </section>

@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets';
 import profile from '../assets/images/profile.jpg';
 import { categories, projects } from '../data/projects';
+import ProfileLinks from './ProfileLinks.astro';
 import { getLang, useTranslations } from '../i18n/utils';
 
 const lang = getLang(Astro.currentLocale);
@@ -38,6 +39,7 @@ const count = (id: string) => projects.filter((p) => p.category === id).length;
           <li><a class="chip" href="#work" data-filter-link={c.id}>{c.label[lang]} <span>{count(c.id)}</span></a></li>
         ))}
       </ul>
+      <ProfileLinks class="hero__links" />
     </div>
 
     <p class="hero__scroll label" aria-hidden="true">{t('hero.scroll')}</p>
@@ -80,6 +82,7 @@ const count = (id: string) => projects.filter((p) => p.category === id).length;
   }
   .chip span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
   .chip:hover { border-color: var(--ink); }
+  .hero__copy :global(.hero__links) { margin-top: 14px; }
 
   .hero__scroll { display: none; }
 

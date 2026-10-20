@@ -1,0 +1,116 @@
+---
+/**
+ * GitHub-style activity grid: commits per day over the last year, across all repos (private included).
+ * Data: src/data/github-activity.json, built by scripts/github-activity.mjs (runs before each deploy).
+ * Columns are weeks (Sunday first, like GitHub), rows are weekdays. Monochrome: more commits, more white.
+ */
+import data from '../data/github-activity.json';
+import { getLang, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const days = data.days as Record<string, number>;
+
+const DAY = 864e5;
+const end = Date.parse(`${data.generated}T00:00:00Z`);
+const from = Date.parse(`${data.from}T00:00:00Z`);
+const start = from - new Date(from).getUTCDay() * DAY; // back to Sunday
+const level = (n: number) => (n === 0 ? 0 : n <= 2 ? 1 : n <= 5 ? 2 : n <= 10 ? 3 : 4);
+const dayFmt = new Intl.DateTimeFormat(lang, { day: 'numeric', month: 'long', year: 'numeric', timeZone: 'UTC' });
+const monthFmt = new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' });
+
+const weeks: { date: string; n: number; out: boolean }[][] = [];
+const months: { col: number; label: string }[] = [];
+for (let w = start, col = 0; w <= end; w += 7 * DAY, col++) {
+  const week = [];
+  for (let d = 0; d < 7; d++) {
+    const ts = w + d * DAY;
+    const date = new Date(ts).toISOString().slice(0, 10);
+    week.push({ date, n: days[date] ?? 0, out: ts < from || ts > end });
+  }
+  // label a column when a month starts inside it (skip a cramped first label)
+  const first = week.find((c) => c.date.endsWith('-01') && !c.out);
+  if (first && col < 52) months.push({ col, label: monthFmt.format(Date.parse(`${first.date}T00:00:00Z`)).replace('.', '') });
+  weeks.push(week);
+}
+const tip = (c: { date: string; n: number }) => {
+  const when = dayFmt.format(Date.parse(`${c.date}T00:00:00Z`));
+  return c.n === 0 ? t('activity.none', { d: when }) : t(c.n === 1 ? 'activity.one' : 'activity.many', { n: c.n, d: when });
+};
+const weekday = new Intl.DateTimeFormat(lang, { weekday: 'short', timeZone: 'UTC' });
+// 2026-10-19 was a Monday
+const dayLabels = [1, 3, 5].map((i) => ({ row: i, label: weekday.format(Date.UTC(2026, 9, 18 + i)).replace('.', '') }));
+const activeDays = Object.values(days).filter((n) => n > 0).length;
+---
+
+<figure class="activity" aria-labelledby="activity-caption">
+  <figcaption class="activity__head">
+    <p id="activity-caption"><strong>{data.total}</strong> {t('activity.total')}</p>
+    <p class="label">{t('activity.note', { d: activeDays })}</p>
+  </figcaption>
+
+  <div class="activity__scroll" data-activity-scroll>
+    <div class="grid" style={`--weeks:${weeks.length}`}>
+      <div class="grid__months" aria-hidden="true">
+        {months.map((m) => <span style={`grid-column:${m.col + 1}`}>{m.label}</span>)}
+      </div>
+      <div class="grid__days" aria-hidden="true">
+        {dayLabels.map((d) => <span style={`grid-row:${d.row + 1}`}>{d.label}</span>)}
+      </div>
+      <div class="grid__cells" role="img" aria-label={`${data.total} ${t('activity.total')}`}>
+        {weeks.map((week) => week.map((c) => (
+          c.out ? <i class="cell cell--out"></i> : <i class:list={['cell', `l${level(c.n)}`]} title={tip(c)}></i>
+        )))}
+      </div>
+    </div>
+  </div>
+
+  <div class="activity__legend label" aria-hidden="true">
+    <span>{t('activity.less')}</span>
+    {[0, 1, 2, 3, 4].map((l) => <i class:list={['cell', `l${l}`]}></i>)}
+    <span>{t('activity.more')}</span>
+  </div>
+</figure>
+
+<script>
+  // on narrow screens the grid scrolls sideways: start at the most recent weeks
+  document.querySelectorAll<HTMLElement>('[data-activity-scroll]').forEach((el) => { el.scrollLeft = el.scrollWidth; });
+</script>
+
+<style>
+  .activity { margin-bottom: 56px; padding: 24px; border: 1px solid var(--line); border-radius: 18px; background: var(--surface); }
+  .activity__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 8px 24px; margin-bottom: 20px; }
+  .activity__head p:first-child { font-size: 18px; color: var(--ink-2); }
+  .activity__head strong { font-weight: 400; color: var(--ink); }
+
+  .activity__scroll { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--line-2) transparent; padding-bottom: 4px; }
+  .grid {
+    --cell: 11px; --gap: 3px;
+    display: grid; grid-template-columns: 30px auto; grid-template-rows: auto auto; column-gap: 6px; row-gap: 6px;
+    width: max-content;
+  }
+  .grid__months { grid-column: 2; display: grid; grid-template-columns: repeat(var(--weeks), var(--cell)); column-gap: var(--gap); font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: capitalize; }
+  .grid__months span { white-space: nowrap; }
+  .grid__days { grid-column: 1; grid-row: 2; display: grid; grid-template-rows: repeat(7, var(--cell)); row-gap: var(--gap); font-family: var(--mono); font-size: 10px; color: var(--muted); text-transform: capitalize; }
+  .grid__days span { line-height: var(--cell); }
+  .grid__cells { grid-column: 2; grid-row: 2; display: grid; grid-auto-flow: column; grid-template-rows: repeat(7, var(--cell)); grid-auto-columns: var(--cell); gap: var(--gap); }
+
+  .cell { display: block; width: var(--cell, 11px); height: var(--cell, 11px); border-radius: 3px; }
+  .cell--out { visibility: hidden; }
+  .l0 { background: var(--raised); }
+  .l1 { background: rgb(250 250 247 / .22); }
+  .l2 { background: rgb(250 250 247 / .45); }
+  .l3 { background: rgb(250 250 247 / .72); }
+  .l4 { background: var(--ink); }
+
+  .activity__legend { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 14px; }
+  .activity__legend span { margin: 0 4px; }
+  .activity__legend .cell { --cell: 11px; }
+
+  @media (min-width: 1024px) {
+    .activity { padding: 32px; }
+    /* 53 weeks fit the card: 53 × 20px + day labels < 1200 - 2 × 32px padding */
+    .grid { --cell: 16px; --gap: 4px; }
+    .grid__months, .grid__days { font-size: 11px; }
+  }
+</style>
