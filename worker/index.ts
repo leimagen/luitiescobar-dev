@@ -20,7 +20,34 @@ const CV = /^\/cv\/luiti-escobar-cv-(en|es)\.pdf$/;
 // link previews, crawlers and scripts don't count as downloads
 const BOT = /bot|crawl|spider|slurp|preview|facebookexternalhit|embedly|whatsapp|telegram|discord|slack|skype|curl|wget|python|node-fetch|axios|go-http|headless|lighthouse/i;
 
-const escapeHtml = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+// Cloud and hosting networks: link scanners (Outlook/Defender Safe Links, LinkedIn, Slack...) open the PDF from
+// there with a normal browser user agent. A recruiter's download comes from a home, office or mobile network.
+const DATACENTER_ASN = new Set([
+  8075, 8068, 8069, 8070, 8071, 8072, 8073, 8074, // Microsoft / Azure
+  16509, 14618, 7224, // Amazon / AWS
+  15169, 396982, 19527, 36040, 36384, 36492, 139070, // Google / Google Cloud
+  13335, 209242, // Cloudflare
+  54113, // Fastly
+  14061, // DigitalOcean
+  16276, 35540, // OVH
+  24940, 213230, // Hetzner
+  63949, 20940, 16625, // Linode / Akamai
+  31898, // Oracle Cloud
+  45102, 37963, // Alibaba
+  132203, 45090, // Tencent
+  20473, // Vultr / Choopa
+  12876, // Scaleway
+  51167, // Contabo
+  60781, 16265, 28753, // Leaseweb
+  36352, // ColoCrossing
+  46606, // Unified Layer
+]);
+const DATACENTER_ORG = /amazon|aws|google cloud|google llc|microsoft|azure|digitalocean|ovh|hetzner|linode|akamai|oracle|alibaba|tencent|vultr|choopa|scaleway|contabo|leaseweb|colocrossing|cloudflare|fastly|hosting|datacenter|data center/i;
+
+const fromDatacenter = (cf?: IncomingRequestCfProperties) =>
+  !!cf && (DATACENTER_ASN.has(Number(cf.asn)) || DATACENTER_ORG.test(String(cf.asOrganization ?? '')));
+
+const escapeHtml =(s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 /** Anonymous visitor id: salted SHA-256 of IP + user agent. Nothing personal is stored. */
 async function visitorId(request: Request, salt: string) {
@@ -51,6 +78,9 @@ function fromPage(request: Request, host: string): string | undefined {
 async function recordDownload(request: Request, env: Env, lang: string) {
   const ua = request.headers.get('user-agent') ?? '';
   if (!ua || BOT.test(ua)) return;
+  const cf = (request as Request & { cf?: IncomingRequestCfProperties }).cf;
+  // scanners from cloud networks are neither counted nor announced
+  if (fromDatacenter(cf)) return;
   const visitor = await visitorId(request, env.CV_SALT ?? 'luitiescobar-dev');
   const now = Date.now();
   const [inserted, total, recent] = await env.DB.batch<{ n: number }>([
@@ -63,8 +93,7 @@ async function recordDownload(request: Request, env: Env, lang: string) {
   if ((recent.results[0]?.n ?? 0) > MAX_PER_HOUR) return;
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return;
 
-  const cf = (request as Request & { cf?: IncomingRequestCfProperties }).cf;
-  const country = cf?.country && cf.country !== 'XX' && cf.country !== 'T1' ? new Intl.DisplayNames(['es'], { type: 'region' }).of(cf.country) : undefined;
+  const country =cf?.country && cf.country !== 'XX' && cf.country !== 'T1' ? new Intl.DisplayNames(['es'], { type: 'region' }).of(cf.country) : undefined;
   const place = [cf?.city, country].filter(Boolean).join(', ');
   const from = fromPage(request, new URL(request.url).host);
   const count = total.results[0]?.n ?? 0;
