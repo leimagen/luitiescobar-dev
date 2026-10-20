@@ -4,7 +4,8 @@
 
 export const contact = {
   name: 'Luiti Escobar',
-  // the phone only goes in the private PDFs (cv/out), never in the ones published on the site
+  // the phone lives in cv/private.mjs (git-ignored) and only goes in the private PDFs (cv/out), never on the site:
+  //   export const phone = '+34 ...';
   phone: '',
   email: 'info@luitiescobar.com',
   web: 'dev.luitiescobar.com',

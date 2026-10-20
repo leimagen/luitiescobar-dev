@@ -10,6 +10,9 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 import sharp from 'sharp';
 import { contact, cv } from './content.mjs';
 
+// phone number from the git-ignored cv/private.mjs; without it the private PDFs are built without a phone
+try { contact.phone = (await import('./private.mjs')).phone ?? ''; } catch { /* no private file */ }
+
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const out = join(root, 'cv', 'out');
 const pub = join(root, 'public', 'cv');
@@ -108,7 +111,7 @@ function html(c, { withPhoto, withPhone }) {
     <p class="role">${esc(c.title)}</p>
     <p class="areas">${c.areas.map((d) => `<span>${esc(d)}</span>`).join('')}</p>
     <p class="contact">
-      ${withPhone ? link(`tel:${contact.phone.replace(/\s/g, '')}`, contact.phone) : ''}
+      ${withPhone && contact.phone ? link(`tel:${contact.phone.replace(/\s/g, '')}`, contact.phone) : ''}
       ${link(`mailto:${contact.email}`, contact.email)}
       ${link(`https://${contact.web}${c.lang === 'es' ? '/es/' : '/'}`, contact.web)}
       ${link(`https://${contact.github}`, contact.github)}
