@@ -1,0 +1,55 @@
+---
+import { earlierJobs, formatJob } from '../data/profile';
+import { getLang, useTranslations } from '../i18n/utils';
+
+interface Props {
+  /** heading level, so the block can sit under another section */
+  level?: 'h2' | 'h3';
+  title?: string;
+  intro?: string;
+}
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const { level = 'h2', title = t('background.title'), intro = t('background.text') } = Astro.props;
+const H = level;
+---
+
+<div class="earlier">
+  <div class="earlier__head">
+    <H class="section-title">{title}</H>
+    {intro && <p>{intro}</p>}
+  </div>
+  <ol class="jobs">
+    {earlierJobs.map((j) => (
+      <li class="job">
+        <p class="job__period label">{formatJob(j, lang)}</p>
+        <div>
+          <p class="job__role">{j.role[lang]}</p>
+          <p class="job__company">{j.company} <span>{j.place[lang]}</span></p>
+          <ul class="job__points">
+            {j.points.map((pt) => <li>{pt[lang]}</li>)}
+          </ul>
+        </div>
+      </li>
+    ))}
+  </ol>
+</div>
+
+<style>
+  .earlier__head { display: grid; gap: 12px; margin-bottom: 28px; }
+  .earlier__head p { color: var(--ink-2); max-width: 32em; }
+  .jobs { list-style: none; border-top: 1px solid var(--line); }
+  .job { display: grid; gap: 10px; padding: 24px 0; border-bottom: 1px solid var(--line); }
+  .job__role { font-size: 22px; font-weight: 300; line-height: 1.25; }
+  .job__company { margin-top: 4px; font-weight: 400; }
+  .job__company span { margin-left: 10px; font-weight: 300; color: var(--muted); font-size: 15px; }
+  .job__points { margin-top: 12px; padding-left: 1.1em; color: var(--ink-2); display: grid; gap: 6px; max-width: 40em; }
+  .job__points li::marker { color: var(--muted); }
+
+  @media (min-width: 768px) {
+    .earlier__head { grid-template-columns: 1fr 1fr; align-items: end; gap: 48px; margin-bottom: 40px; }
+    .job { grid-template-columns: 180px 1fr; gap: 48px; padding: 32px 0; }
+    .job__period { padding-top: 6px; }
+  }
+</style>

@@ -1,0 +1,24 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getLang, localizePath, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<BaseLayout title={t('404.meta')} noindex>
+  <section class="container nf">
+    <p class="nf__code" aria-hidden="true">404<span>+</span></p>
+    <h1>{t('404.title')}</h1>
+    <p>{t('404.text')}</p>
+    <a class="text-link" href={localizePath('/', lang)}>{t('404.cta')}</a>
+  </section>
+</BaseLayout>
+
+<style>
+  .nf { padding: 48px 0 0; display: grid; gap: 18px; justify-items: start; }
+  .nf__code { font-size: clamp(96px, 20vw, 240px); font-weight: 200; line-height: .9; letter-spacing: -.04em; }
+  .nf__code span { color: var(--muted); }
+  h1 { font-size: clamp(28px, 3.4vw, 44px); font-weight: 300; letter-spacing: -.02em; }
+  p { color: var(--ink-2); max-width: 30em; }
+</style>

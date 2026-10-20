@@ -1,0 +1,65 @@
+---
+/**
+ * Project cover: the screenshot when there is one, otherwise a typographic tile
+ * (project name + stack), so private projects with no shareable visuals still get a cover.
+ */
+import { Image } from 'astro:assets';
+import type { Project } from '../data/projects';
+import { getLang } from '../i18n/utils';
+
+interface Props {
+  project: Project;
+  sizes: string;
+  eager?: boolean;
+  /** big = project page header */
+  size?: 'thumb' | 'big';
+  class?: string;
+}
+
+const { project: p, sizes, eager = false, size = 'thumb', class: cls } = Astro.props;
+const lang = getLang(Astro.currentLocale);
+// logos and sprite sheets sit on a tile instead of filling it
+const contain = p.cover?.fit === 'contain';
+---
+
+<figure class:list={['cover', `cover--${size}`, { 'cover--type': !p.cover, 'cover--contain': contain }, cls]}>
+  {p.cover ? (
+    <Image
+      src={p.cover.src}
+      alt={p.cover.alt[lang]}
+      widths={size === 'big' ? [640, 960, 1280, 1600] : [320, 480, 640, 800]}
+      sizes={sizes}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : undefined}
+      style={p.cover.position ? `object-position:${p.cover.position}` : undefined}
+    />
+  ) : (
+    <div class="cover__type" aria-hidden="true">
+      <span class="cover__name">{p.name}</span>
+      <span class="cover__stack">{p.stack.slice(0, 4).join(' / ')}</span>
+    </div>
+  )}
+</figure>
+
+<style>
+  .cover { position: relative; aspect-ratio: 16 / 10; overflow: hidden; border-radius: 14px; background: var(--surface); border: 1px solid var(--line); }
+  .cover :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 0%; }
+  .cover--contain { background: #0e0e0e; }
+  .cover--contain :global(img) { object-fit: contain; padding: 12%; image-rendering: auto; }
+
+  .cover__type {
+    position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: space-between;
+    padding: 8%; background:
+      linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 100% 25%,
+      var(--surface);
+  }
+  .cover__name { font-size: 12cqi; font-weight: 200; letter-spacing: -.02em; line-height: 1; }
+  .cover__stack { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .cover { container-type: inline-size; }
+
+  .cover--big { border-radius: 18px; }
+  .cover--big .cover__stack { font-size: 13px; }
+  @media (min-width: 768px) {
+    .cover--big { border-radius: 28px; }
+  }
+</style>

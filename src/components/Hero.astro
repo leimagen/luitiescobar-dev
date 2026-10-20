@@ -1,0 +1,109 @@
+---
+import { Image } from 'astro:assets';
+import profile from '../assets/images/profile.jpg';
+import { categories, projects } from '../data/projects';
+import { getLang, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const lines = [t('hero.title.1'), t('hero.title.2')];
+// "AI" / "IA" carries the weight in both languages
+const emphasis = lines.findIndex((l) => /\b(AI|IA)\b/.test(l));
+// longest line drives the font size so every language fits the column (see .hero__title)
+// (+1 on the last line for the trailing \"+\")
+const chars = Math.max(...lines.map((l, i) => l.length + (i === lines.length - 1 ? 1 : 0)));
+const count = (id: string) => projects.filter((p) => p.category === id).length;
+---
+
+<section class="hero">
+  <div class="container hero__inner">
+    <Image
+      class="hero__photo"
+      src={profile}
+      alt="Luiti Escobar"
+      widths={[320, 480, 640, 960]}
+      sizes="(min-width: 1024px) 461px, min(75vw, 420px)"
+      loading="eager"
+      fetchpriority="high"
+    />
+
+    <div class="hero__copy">
+      <p class="hero__greeting">{t('hero.greeting')}</p>
+      <h1 class="hero__title" style={`--chars:${chars}`}>
+        {lines.map((line, i) => <span class:list={{ em: i === emphasis }}>{line}<b aria-hidden="true">{i === lines.length - 1 ? '+' : ''}</b></span>)}
+      </h1>
+      <p class="hero__sub">{t('hero.sub')}</p>
+      <ul class="chips" aria-label={t('work.filter')}>
+        {categories.map((c) => (
+          <li><a class="chip" href="#work" data-filter-link={c.id}>{c.label[lang]} <span>{count(c.id)}</span></a></li>
+        ))}
+      </ul>
+    </div>
+
+    <p class="hero__scroll label" aria-hidden="true">{t('hero.scroll')}</p>
+  </div>
+</section>
+
+<style>
+  /* ---------- mobile first ---------- */
+  .hero { --u: min(100vw / 375, 1.5px); position: relative; }
+  .hero__inner { position: relative; padding-top: calc(24 * var(--u)); }
+
+  .hero__photo {
+    position: relative; z-index: 1;
+    margin-left: calc(-1 * var(--gutter));
+    width: calc(280 * var(--u)); height: calc(336 * var(--u));
+    object-fit: cover; object-position: 50% 20%;
+    border-radius: 0 10px calc(140 * var(--u)) 0;
+    filter: grayscale(1) contrast(1.04);
+  }
+
+  .hero__copy { position: relative; z-index: 1; margin-top: 36px; container-type: inline-size; }
+  .hero__greeting { font-size: 17px; color: var(--ink-2); margin-bottom: 6px; }
+  .hero__title {
+    /* longest line spans at most 92% of the copy column (≈0.55em per uppercase glyph) */
+    --fit: calc(92cqi / (var(--chars) * 0.55));
+    display: flex; flex-direction: column;
+    font-size: min(clamp(48px, 15vw, 96px), var(--fit));
+    font-weight: 200; line-height: .92; letter-spacing: -.03em; text-transform: uppercase;
+  }
+  .hero__title .em { font-weight: 400; }
+  .hero__title b { font-weight: 200; color: var(--muted); }
+  .hero__sub { margin-top: 22px; max-width: 34em; font-size: 17px; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin-top: 24px; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 7px 14px; border-radius: 99px; min-height: 36px;
+    background: var(--surface); border: 1px solid var(--line-2); font-size: 14px;
+    transition: border-color .2s, background .2s;
+  }
+  .chip span { font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .chip:hover { border-color: var(--ink); }
+
+  .hero__scroll { display: none; }
+
+  /* ---------- desktop ---------- */
+  @media (min-width: 1024px) {
+    .hero__inner { min-height: 659px; padding-top: 70px; padding-bottom: 80px; border-bottom: 1px solid var(--line); }
+
+    .hero__photo {
+      position: absolute; top: 19px;
+      margin: 0; left: calc(50% - 50vw);
+      width: calc(50vw - 50% + 28.4%); height: 554px;
+      border-radius: 0 10px 233px 0;
+    }
+
+    .hero__copy { margin: 0 0 0 35.17%; }
+    .hero__greeting { font-size: 22px; }
+    .hero__title { font-size: min(clamp(96px, 10.4vw, 150px), var(--fit)); }
+    .hero__sub { font-size: 19px; margin-top: 30px; }
+    .chips { margin-top: 30px; gap: 10px; }
+
+    .hero__scroll {
+      display: flex; align-items: center; gap: 12px;
+      position: absolute; left: 0; top: 576px; letter-spacing: .3em; text-transform: uppercase; font-size: 11px;
+    }
+    .hero__scroll::before { content: ""; width: 1px; height: 38px; background: var(--ink); }
+  }
+</style>

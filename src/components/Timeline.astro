@@ -1,0 +1,109 @@
+---
+/**
+ * Commit history: one row per project, one bar per stretch of commits (first to last commit in the repo).
+ * Pure CSS positioning in % of the axis; no JS. Data comes from src/data/projects.ts.
+ */
+import { activeDays, firstCommit, formatDay, projects, totalCommits } from '../data/projects';
+import { getLang, localizePath, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+
+const rows = [...projects].sort((a, b) => firstCommit(a).localeCompare(firstCommit(b)));
+const axisStart = Date.parse('2026-05-01');
+const axisEnd = Date.parse('2026-11-01');
+const span = axisEnd - axisStart;
+const pct = (d: string | number) => (((typeof d === 'number' ? d : Date.parse(d)) - axisStart) / span) * 100;
+
+const monthFmt = new Intl.DateTimeFormat(lang, { month: 'short', timeZone: 'UTC' });
+const months: { label: string; left: number }[] = [];
+for (let m = 4; m < 10; m++) {
+  const d = Date.UTC(2026, m, 1);
+  months.push({ label: monthFmt.format(d).replace('.', ''), left: pct(d) });
+}
+const commits = projects.reduce((n, p) => n + totalCommits(p), 0);
+const dayWord = (n: number) => `${n} ${n === 1 ? t('timeline.day') : t('timeline.days')}`;
+---
+
+<section class="timeline container" id="timeline" aria-labelledby="timeline-title">
+  <header class="timeline__head">
+    <h2 class="section-title" id="timeline-title">{t('timeline.title')}</h2>
+    <p class="timeline__text">{t('timeline.text')}</p>
+    <p class="timeline__total label"><strong>{projects.length}</strong> {t('timeline.total', { n: commits })}</p>
+  </header>
+
+  <div class="chart">
+    <div class="chart__axis" aria-hidden="true">
+      {months.map((m) => <span style={`left:${m.left}%`}>{m.label}</span>)}
+    </div>
+    <ol class="chart__rows">
+      {rows.map((p) => (
+        <li class="row">
+          <a class="row__name" href={localizePath(`/work/${p.slug}`, lang)}>{p.name}</a>
+          <div class="row__track">
+            {months.map((m) => <i class="row__grid" style={`left:${m.left}%`} aria-hidden="true"></i>)}
+            {p.spans.map((s) => (
+              <span
+                class="bar"
+                style={`left:${pct(s.start)}%;width:${(activeDays(s) * 864e5 / span) * 100}%`}
+                title={`${s.label ? s.label + ': ' : ''}${formatDay(s.start, lang)} - ${formatDay(s.end, lang)}, ${s.commits} ${t('timeline.commits')}`}
+              >
+                {s.label && <em aria-hidden="true">{s.label}</em>}
+              </span>
+            ))}
+            <span class="visually-hidden">
+              {p.spans.map((s) => `${s.label ? s.label + ': ' : ''}${formatDay(s.start, lang)} - ${formatDay(s.end, lang)}, ${s.commits} ${t('timeline.commits')}, ${dayWord(activeDays(s))}. `)}
+            </span>
+          </div>
+          <span class="row__count" aria-hidden="true">{totalCommits(p)}</span>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .timeline { margin-top: 96px; }
+  .timeline__head { display: grid; gap: 14px; margin-bottom: 40px; }
+  .timeline__text { max-width: 36em; color: var(--ink-2); }
+  .timeline__total strong { color: var(--ink); font-weight: 400; }
+
+  .chart { --label: 0px; --count: 34px; }
+  .chart__axis { position: relative; height: 20px; margin: 0 var(--count) 6px var(--label); font-family: var(--mono); font-size: 11px; color: var(--muted); }
+  .chart__axis span { position: absolute; top: 0; text-transform: capitalize; }
+
+  .chart__rows { list-style: none; border-top: 1px solid var(--line); }
+  .row {
+    display: grid; grid-template-columns: 1fr var(--count); grid-template-areas: "name name" "track count";
+    align-items: center; column-gap: 0; padding: 12px 0 14px; border-bottom: 1px solid var(--line);
+  }
+  .row__name { grid-area: name; font-size: 15px; margin-bottom: 8px; transition: color .2s; color: var(--ink-2); }
+  .row__name:hover { color: var(--ink); }
+  .row__track { grid-area: track; position: relative; height: 14px; }
+  .row__grid { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--line); }
+  .row__count { grid-area: count; text-align: right; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+
+  .bar {
+    position: absolute; top: 2px; height: 10px; min-width: 6px; border-radius: 99px;
+    background: var(--ink);
+  }
+  .bar em {
+    position: absolute; left: 50%; bottom: 14px; translate: -50% 0;
+    font-style: normal; font-family: var(--mono); font-size: 10px; color: var(--muted); white-space: nowrap;
+  }
+  .row:has(.bar em) .row__track { margin-top: 12px; }
+  .row:hover .bar { background: #fff; box-shadow: 0 0 0 3px rgb(250 250 247 / .12); }
+
+  @media (min-width: 768px) {
+    .timeline { margin-top: 140px; }
+    .timeline__head { grid-template-columns: 1fr 1fr; align-items: end; column-gap: 48px; margin-bottom: 56px; }
+    .timeline__head h2 { grid-column: 1; grid-row: 1 / 3; align-self: start; }
+    .timeline__total { grid-column: 2; }
+
+    .chart { --label: 220px; --count: 56px; }
+    .row { grid-template-columns: var(--label) 1fr var(--count); grid-template-areas: "name track count"; padding: 0; height: 52px; }
+    .row:has(.bar em) .row__track { margin-top: 0; }
+    .row__name { margin: 0; padding-right: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar em { bottom: auto; top: -15px; }
+  }
+</style>

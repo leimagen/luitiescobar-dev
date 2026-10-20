@@ -1,0 +1,100 @@
+---
+import Cover from './Cover.astro';
+import { byRecent, categories, formatSpan, totalCommits } from '../data/projects';
+import { getLang, localizePath, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const label = Object.fromEntries(categories.map((c) => [c.id, c.label[lang]]));
+---
+
+<section class="work container" id="work" aria-labelledby="work-title">
+  <header class="work__head">
+    <h2 class="section-title" id="work-title">{t('work.title')}</h2>
+    <p class="label">{t('work.count', { n: byRecent.length })}</p>
+  </header>
+
+  <div class="filters" role="group" aria-label={t('work.filter')}>
+    <button type="button" data-filter="all" aria-pressed="true">{t('work.all')}</button>
+    {categories.map((c) => <button type="button" data-filter={c.id} aria-pressed="false">{c.label[lang]}</button>)}
+  </div>
+
+  <ol class="list">
+    {byRecent.map((p) => (
+      <li class="item" data-category={p.category}>
+        <a class="item__link" href={localizePath(`/work/${p.slug}`, lang)}>
+          <span class="item__meta label">
+            <span>{formatSpan(p, lang)}</span>
+            <span>{totalCommits(p)} {t('timeline.commits')}</span>
+          </span>
+          <span class="item__main">
+            <span class="item__name">{p.name}</span>
+            <span class="item__summary">{p.summary[lang]}</span>
+            <span class="item__tags label">
+              <span class="item__cat">{label[p.category]}</span>
+              {p.stack.slice(0, 3).map((s) => <span>{s}</span>)}
+            </span>
+          </span>
+          <Cover class="item__cover" project={p} sizes="(min-width: 1024px) 280px, (min-width: 768px) 30vw, 100vw" />
+        </a>
+      </li>
+    ))}
+  </ol>
+</section>
+
+<script>
+  const root = document.getElementById('work');
+  const buttons = [...(root?.querySelectorAll<HTMLButtonElement>('[data-filter]') ?? [])];
+  const items = [...(root?.querySelectorAll<HTMLElement>('.item') ?? [])];
+  const apply = (id: string) => {
+    buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.filter === id)));
+    items.forEach((i) => (i.hidden = id !== 'all' && i.dataset.category !== id));
+  };
+  buttons.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter!)));
+  // hero chips jump here with a filter applied
+  document.querySelectorAll<HTMLAnchorElement>('[data-filter-link]').forEach((a) =>
+    a.addEventListener('click', () => apply(a.dataset.filterLink!)),
+  );
+</script>
+
+<style>
+  .work { margin-top: 96px; }
+  .work__head { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; }
+
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .filters button {
+    min-height: 36px; padding: 6px 14px; border-radius: 99px; border: 1px solid var(--line-2);
+    font-size: 14px; color: var(--ink-2); transition: color .2s, border-color .2s, background .2s;
+  }
+  .filters button:hover { color: var(--ink); border-color: var(--ink); }
+  .filters button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+  .list { list-style: none; border-top: 1px solid var(--line); }
+  .item[hidden] { display: none; }
+  .item { border-bottom: 1px solid var(--line); }
+  .item__link { display: grid; gap: 14px; padding: 24px 0 28px; }
+  .item__meta { display: flex; gap: 16px; }
+  .item__main { display: grid; gap: 10px; }
+  .item__name { font-size: clamp(28px, 4vw, 44px); font-weight: 200; letter-spacing: -.02em; line-height: 1.05; transition: color .2s; }
+  .item__summary { color: var(--ink-2); max-width: 36em; text-wrap: pretty; }
+  .item__tags { display: flex; flex-wrap: wrap; gap: 6px 14px; }
+  .item__cat { color: var(--ink-2); }
+  .item :global(.item__cover) { order: -1; }
+
+  @media (hover: hover) {
+    .item__link:hover .item__name { color: #fff; }
+    .item__link :global(.item__cover img) { transition: transform .6s var(--ease); }
+    .item__link:hover :global(.item__cover img) { transform: scale(1.03); }
+  }
+
+  @media (min-width: 768px) {
+    .work { margin-top: 140px; }
+    .work__head { margin-bottom: 32px; }
+    .item__link { grid-template-columns: 150px 1fr 30%; gap: 32px; align-items: start; padding: 32px 0; }
+    .item__meta { flex-direction: column; gap: 4px; padding-top: 8px; }
+    .item :global(.item__cover) { order: 0; }
+  }
+  @media (min-width: 1024px) {
+    .item__link { grid-template-columns: 180px 1fr 280px; gap: 48px; }
+  }
+</style>

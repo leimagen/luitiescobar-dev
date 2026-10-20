@@ -1,0 +1,11 @@
+{
+  "name": "Luiti Escobar, AI Developer",
+  "short_name": "le+",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "theme_color": "#141414",
+  "background_color": "#141414",
+  "display": "browser"
+}

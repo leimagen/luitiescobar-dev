@@ -1,0 +1,33 @@
+---
+import { email, location } from '../data/profile';
+import { getLang, useTranslations } from '../i18n/utils';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+---
+
+<section class="contact container" id="contact" aria-labelledby="contact-title">
+  <h2 class="contact__title" id="contact-title"><span>{t('contact.title.1')}</span> <span>{t('contact.title.2')}</span></h2>
+  <div class="contact__side">
+    <p>{t('contact.text')}</p>
+    <a class="contact__mail" href={`mailto:${email}`}>{email}</a>
+    <p class="label">{location[lang]}</p>
+  </div>
+</section>
+
+<style>
+  .contact { margin-top: 96px; padding-top: 40px; border-top: 1px solid var(--line); display: grid; gap: 28px; }
+  .contact__title { font-size: clamp(44px, 8vw, 112px); font-weight: 200; letter-spacing: -.035em; line-height: .95; text-transform: uppercase; }
+  .contact__title span { display: block; }
+  .contact__title span + span { font-weight: 400; }
+  .contact__side { display: grid; gap: 16px; align-content: end; max-width: 30em; color: var(--ink-2); }
+  .contact__mail {
+    justify-self: start; font-size: clamp(20px, 2.2vw, 28px); font-weight: 300; color: var(--ink);
+    border-bottom: 1px solid var(--line-2); padding-bottom: 4px; transition: border-color .2s;
+  }
+  .contact__mail:hover { border-color: var(--ink); }
+
+  @media (min-width: 1024px) {
+    .contact { margin-top: 160px; padding-top: 56px; grid-template-columns: 1.4fr 1fr; gap: 48px; align-items: end; }
+  }
+</style>

@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectIndex from '../components/ProjectIndex.astro';
+import Timeline from '../components/Timeline.astro';
+import EarlierWork from '../components/EarlierWork.astro';
+import ContactStrip from '../components/ContactStrip.astro';
+import { getLang, localizePath, useTranslations } from '../i18n/utils';
+import { SITE } from '../lib/seo';
+import { byRecent } from '../data/projects';
+
+const lang = getLang(Astro.currentLocale);
+const t = useTranslations(lang);
+const schema = [{
+  '@type': 'ItemList',
+  name: t('work.title'),
+  itemListElement: byRecent.map((p, i) => ({
+    '@type': 'ListItem', position: i + 1, name: p.name,
+    url: `${SITE}${localizePath(`/work/${p.slug}/`, lang)}`,
+  })),
+}];
+---
+
+<BaseLayout schema={schema}>
+  <Hero />
+
+  <section class="intro container" aria-label={t('intro.label')}>
+    <p class="label">{t('intro.label')}</p>
+    <div class="intro__text">
+      <p>{t('intro.p1')}</p>
+      <p>{t('intro.p2')}</p>
+      <a class="text-link" href={localizePath('/about', lang)}>{t('intro.more')}</a>
+    </div>
+  </section>
+
+  <ProjectIndex />
+  <Timeline />
+
+  <section class="container background" aria-label={t('background.title')}>
+    <EarlierWork />
+  </section>
+
+  <ContactStrip />
+</BaseLayout>
+
+<style>
+  .intro { margin-top: 72px; display: grid; gap: 18px; }
+  .intro__text { display: grid; gap: 20px; justify-items: start; }
+  .intro__text p { font-size: clamp(20px, 2.3vw, 30px); font-weight: 200; line-height: 1.35; letter-spacing: -.01em; max-width: 30em; text-wrap: pretty; }
+  .intro__text p + p { color: var(--ink-2); }
+  .background { margin-top: 96px; }
+
+  @media (min-width: 1024px) {
+    .intro { margin-top: 120px; grid-template-columns: 35.17% 1fr; gap: 0; }
+    .intro .label { padding-top: 10px; }
+    .background { margin-top: 140px; }
+  }
+</style>

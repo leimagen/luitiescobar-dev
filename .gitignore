@@ -1,0 +1,24 @@
+# build output
+dist/
+# generated types
+.astro/
+
+# dependencies
+node_modules/
+
+# logs
+npm-debug.log*
+
+# environment variables
+.env
+.env.production
+
+.DS_Store
+.idea/
+
+# wrangler local state
+.wrangler/
+.dev.vars
+
+# generated CV PDFs (contain the phone number)
+cv/out/
