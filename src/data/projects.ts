@@ -174,7 +174,7 @@ export const projects: Project[] = [
     role: { en: 'Concept, development', es: 'Concepto, desarrollo' },
     stack: ['Electron', 'React', 'TypeScript', 'FastAPI', 'SQLite FTS5'],
     ai: ['Ollama', 'Gemma 2', 'Phi-3', 'nomic-embed-text', 'Claude Code'],
-    links: [],
+    links: [{ label: code, href: repo('esco-playground') }],
   },
   {
     slug: 'xfutve',
