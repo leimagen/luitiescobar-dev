@@ -6,6 +6,7 @@ import studyLab from '../assets/work/study-lab-live.png';
 import diario from '../assets/work/diario-live.png';
 import fwc from '../assets/work/fwc-live.png';
 import portfolio from '../assets/work/portfolio-live.png';
+import abrilDiscord from '../assets/work/abril-discord-proactive.png';
 import gmailCleaner from '../assets/work/gmail-cleaner-logo.jpg';
 
 type L = Record<Lang, string>;
@@ -137,6 +138,7 @@ export const projects: Project[] = [
     stack: ['Python', 'PostgreSQL + pgvector', 'Docker', 'Discord', 'Slack', 'Raspberry Pi', 'Google APIs'],
     ai: ['Claude API', 'Claude Agent SDK', 'MCP', 'Voyage embeddings', 'ElevenLabs', 'Codex'],
     links: [],
+    cover: { src: abrilDiscord, alt: { en: 'Abril writing first on Discord: a reminder and a video suggestion', es: 'Abril escribiendo primero en Discord: un recordatorio y una sugerencia de vídeo' } },
     featured: true,
   },
   {
@@ -145,10 +147,10 @@ export const projects: Project[] = [
     category: 'web',
     spans: [{ start: '2026-06-20', end: '2026-06-23', commits: 25 }],
     summary: {
-      en: 'World Cup 2026 standings that recalculate with every live goal, including the best third-placed teams and the round of 32.',
-      es: 'La clasificación del Mundial 2026 recalculada con cada gol en vivo, incluidos los mejores terceros y los dieciseisavos.',
+      en: 'World Cup 2026 standings that recalculated with every live goal, including the best third-placed teams and the round of 32.',
+      es: 'La clasificación del Mundial 2026, recalculada con cada gol en vivo, incluidos los mejores terceros y los dieciseisavos.',
     },
-    status: { en: 'Live', es: 'En producción' },
+    status: { en: 'Ran during the 2026 World Cup', es: 'Funcionó durante el Mundial 2026' },
     role: { en: 'Product, design, development, infrastructure', es: 'Producto, diseño, desarrollo, infraestructura' },
     stack: ['Astro 6', 'React 19', 'TypeScript', 'Python', 'Raspberry Pi', 'Cloudflare Tunnel', 'Web Push'],
     ai: [],
@@ -211,10 +213,10 @@ export const projects: Project[] = [
     category: 'agents',
     spans: [{ start: '2026-05-15', end: '2026-05-22', commits: 40 }],
     summary: {
-      en: 'A job-hunting agent with her own inbox. Every morning she reads job boards, scores offers and sends a tailored CV for each one.',
-      es: 'Una agente de búsqueda de empleo con su propio correo. Cada mañana lee portales, puntúa ofertas y envía un CV adaptado a cada una.',
+      en: 'An experiment with agents and automated web interaction: a job-hunting agent with her own inbox that read job boards, scored offers and sent a tailored CV for each one.',
+      es: 'Un experimento con agentes e interacción web automatizada: una agente de búsqueda de empleo con su propio correo que leía portales, puntuaba ofertas y enviaba un CV adaptado a cada una.',
     },
-    status: { en: 'Working prototype, paused', es: 'Prototipo funcional, en pausa' },
+    status: { en: 'Experiment, retired', es: 'Experimento, retirado' },
     role: { en: 'Concept, prompts, development', es: 'Concepto, prompts, desarrollo' },
     stack: ['Python', 'GitHub Actions', 'Gmail API', 'Google Sheets', 'ReportLab'],
     ai: ['Claude Haiku 4.5', 'Prompt caching', 'Claude Code'],

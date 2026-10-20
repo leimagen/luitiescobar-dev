@@ -44,7 +44,7 @@ export const earlierJobs: Job[] = [
 ];
 
 export const training: { title: string; issuer?: string; detail?: L }[] = [
-  { title: 'Máster en Desarrollo con IA', issuer: 'BIG school', detail: { en: 'AI-assisted software development', es: 'Desarrollo de software asistido por IA' } },
+  { title: 'Desarrollo con IA: El nuevo programador', issuer: 'BIG school', detail: { en: '3-day course taught by Brais Moure', es: 'Curso de 3 días impartido por Brais Moure' } },
   { title: 'EF SET English Certificate', issuer: 'EF', detail: { en: '74/100, C2 Proficient (2021)', es: '74/100, C2 Proficient (2021)' } },
   { title: 'ActionScript 3.0', detail: { en: 'Online training: MVC and object-oriented programming principles', es: 'Formación online: principios de MVC y programación orientada a objetos' } },
 ];
@@ -59,7 +59,7 @@ export const skills: { group: L; items: string[] }[] = [
   { group: { en: 'Languages', es: 'Lenguajes' }, items: ['Python', 'TypeScript', 'JavaScript', 'GDScript', 'GLSL', 'SQL', 'ActionScript 3.0'] },
   { group: { en: 'Frameworks', es: 'Frameworks' }, items: ['Astro', 'React', 'Three.js', 'Phaser', 'Godot', 'FastAPI', 'Electron'] },
   { group: { en: 'Infrastructure', es: 'Infraestructura' }, items: ['Cloudflare Workers, Pages, D1, Tunnel', 'GitHub Actions', 'Docker', 'PostgreSQL', 'SQLite', 'Raspberry Pi'] },
-  { group: { en: 'Design', es: 'Diseño' }, items: ['Figma', 'UI and UX', 'Motion design', 'Blender', 'Art direction'] },
+  { group: { en: 'Design', es: 'Diseño' }, items: ['Figma', 'Photoshop', 'Illustrator', 'After Effects', 'Blender', 'UI and UX', 'Motion design', 'Art direction'] },
 ];
 
 /** How I work with coding agents. Every point is backed by a project on this site. */

@@ -48,8 +48,8 @@ export const cv = {
       {
         name: 'FWC2026 Live', role: 'Live web app', stack: 'Astro, React, TypeScript, Python, Cloudflare, Web Push', start: '2026-06-20', end: '2026-06-23',
         bullets: [
-          'Built a bilingual World Cup 2026 app that recalculates the 12 groups, the best third-placed teams and the round of 32 on every live goal, following FIFA tiebreak rules.',
-          'Python feed on a Raspberry Pi behind a Cloudflare Tunnel, with API keys that never leave the device. Push notifications and an installable PWA. 25 commits in 4 days.',
+          'Built a bilingual World Cup 2026 app that recalculated the 12 groups, the best third-placed teams and the round of 32 on every live goal, following FIFA tiebreak rules.',
+          'Ran a Python feed on a Raspberry Pi behind a Cloudflare Tunnel, with API keys that never left the device, plus push notifications and an installable PWA. 25 commits in 4 days, used throughout the tournament.',
         ],
       },
       {
@@ -60,10 +60,10 @@ export const cv = {
         ],
       },
       {
-        name: 'Annie', role: 'Autonomous job-search agent', stack: 'Python, Claude API, GitHub Actions, Gmail API, Google Sheets', start: '2026-05-15', end: '2026-05-22',
+        name: 'Annie', role: 'Job-search agent (experiment)', stack: 'Python, Claude API, GitHub Actions, Gmail API, Google Sheets', start: '2026-05-15', end: '2026-05-22',
         bullets: [
-          'Agent with her own inbox that reads more than 11 job sources every morning, scores offers with Claude Haiku in structured JSON and sends a tailored CV and cover letter for each one.',
-          'Answers replies every 15 minutes, logs everything in Google Sheets and emails a suggested code change when asked for something she can\'t do. 40 commits in a week.',
+          'Built to experiment with agents and automated web interaction: an agent with her own inbox that read more than 11 job sources every morning, scored offers with Claude Haiku in structured JSON and sent a tailored CV and cover letter for each one.',
+          'Answered replies every 15 minutes, logged everything in Google Sheets and emailed a suggested code change when asked for something she couldn\'t do. 40 commits in a week.',
         ],
       },
       {
@@ -101,10 +101,10 @@ export const cv = {
       ['Frameworks', 'Astro, React, Three.js, Phaser, Godot, FastAPI, Electron'],
       ['Infrastructure', 'Cloudflare (Workers, Pages, D1, Tunnel), GitHub Actions, Docker, PostgreSQL, SQLite, Raspberry Pi'],
       ['Workflow', 'Agent instructions and project memory, spec-driven development, headless tests and simulations, security reviews'],
-      ['Design', 'Figma, UI and UX, motion design, Blender, art direction'],
+      ['Design', 'Figma, Photoshop, Illustrator, After Effects, Blender, UI and UX, motion design, art direction'],
     ],
     training: [
-      ['Máster en Desarrollo con IA', 'BIG school'],
+      ['Desarrollo con IA: El nuevo programador', 'BIG school · Brais Moure (3-day course)'],
       ['EF SET English Certificate', '74/100 · C2 Proficient (2021)'],
       ['ActionScript 3.0 training', 'MVC and OOP principles'],
     ],
@@ -145,8 +145,8 @@ export const cv = {
       {
         name: 'FWC2026 Live', role: 'App web en vivo', stack: 'Astro, React, TypeScript, Python, Cloudflare, Web Push', start: '2026-06-20', end: '2026-06-23',
         bullets: [
-          'Creé una app bilingüe del Mundial 2026 que recalcula los 12 grupos, los mejores terceros y los dieciseisavos con cada gol en vivo, siguiendo los desempates de la FIFA.',
-          'Feed en Python en una Raspberry Pi detrás de un Cloudflare Tunnel, con claves de API que nunca salen del dispositivo. Notificaciones push y PWA instalable. 25 commits en 4 días.',
+          'Creé una app bilingüe del Mundial 2026 que recalculaba los 12 grupos, los mejores terceros y los dieciseisavos con cada gol en vivo, siguiendo los desempates de la FIFA.',
+          'Feed en Python en una Raspberry Pi tras un Cloudflare Tunnel (las claves nunca salieron del dispositivo), push y PWA instalable. 25 commits en 4 días.',
         ],
       },
       {
@@ -157,10 +157,10 @@ export const cv = {
         ],
       },
       {
-        name: 'Annie', role: 'Agente autónomo de búsqueda de empleo', stack: 'Python, Claude API, GitHub Actions, Gmail API, Google Sheets', start: '2026-05-15', end: '2026-05-22',
+        name: 'Annie', role: 'Agente de búsqueda de empleo (experimento)', stack: 'Python, Claude API, GitHub Actions, Gmail API, Google Sheets', start: '2026-05-15', end: '2026-05-22',
         bullets: [
-          'Agente con su propio correo que lee más de 11 fuentes de empleo cada mañana, puntúa ofertas con Claude Haiku en JSON estructurado y envía un CV y una carta a medida por oferta.',
-          'Responde correos cada 15 minutos, lo registra todo en Google Sheets y propone cambios de código cuando le piden algo que no sabe hacer. 40 commits en una semana.',
+          'Experimento con agentes e interacción web automatizada: leía más de 11 fuentes de empleo cada mañana, puntuaba ofertas con Claude Haiku en JSON y enviaba un CV y una carta a medida.',
+          'Respondía correos cada 15 minutos, lo registraba todo en Google Sheets y proponía cambios de código cuando le pedían algo que no sabía hacer. 40 commits en una semana.',
         ],
       },
       {
@@ -198,10 +198,10 @@ export const cv = {
       ['Frameworks', 'Astro, React, Three.js, Phaser, Godot, FastAPI, Electron'],
       ['Infraestructura', 'Cloudflare (Workers, Pages, D1, Tunnel), GitHub Actions, Docker, PostgreSQL, SQLite, Raspberry Pi'],
       ['Método', 'Instrucciones y memoria para agentes, desarrollo guiado por especificaciones, tests y simulaciones sin interfaz, revisiones de seguridad'],
-      ['Diseño', 'Figma, UI y UX, motion design, Blender, dirección de arte'],
+      ['Diseño', 'Figma, Photoshop, Illustrator, After Effects, Blender, UI y UX, motion design, dirección de arte'],
     ],
     training: [
-      ['Máster en Desarrollo con IA', 'BIG school'],
+      ['Desarrollo con IA: El nuevo programador', 'BIG school · Brais Moure (curso de 3 días)'],
       ['EF SET English Certificate', '74/100 · C2 Proficient (2021)'],
       ['Formación en ActionScript 3.0', 'Principios de MVC y POO'],
     ],

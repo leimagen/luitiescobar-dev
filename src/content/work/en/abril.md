@@ -2,6 +2,10 @@
 
 I wanted one place to ask about my calendar, my mail, my expenses and the next bus home, and I wanted it to answer like a person. So in June 2026 I built Abril and gave her a Raspberry Pi 4 in my living room, running all day as a system service.
 
+![Discord chat where Abril picks up a conversation about a space game I had stopped playing](../../../assets/work/abril-discord-chat.png)
+
+*A normal conversation on Discord, June 2026. She remembered what I play and asked the follow-up question a friend would ask.*
+
 ## Version 1: five agents in a week
 
 The first version was a small team. Abril was the orchestrator, and four specialists had their own Slack bots: one for mail, calendar and YouTube, one for research, one for money (it reads photos of receipts and logs them in a spreadsheet) and one for health notes. Each specialist was a Claude tool loop that Abril could call like any other tool. Abril ran on Claude Sonnet and moved up to Opus for hard requests. The specialists ran on Haiku.
@@ -16,7 +20,11 @@ Before adding more, I had the code audited from top to bottom. It found real pro
 
 ## Version 2: one agent with harder edges
 
-Version 2 folded the team into a single agent that keeps every tool. I added prompt caching on the tools and the system prompt, logged token usage per call, and wrote regression tests (80 passing at handoff). Passwords and documents moved into a local encrypted vault that is checked before the model sees a message, so a secret never reaches a prompt, the memory or a log. External tools come in through an MCP client that runs as a subprocess with no API keys in its environment. Discord joined Slack as a second way to talk to her.
+Version 2 folded the team into a single agent that keeps every tool. I added prompt caching on the tools and the system prompt, logged token usage per call, and wrote regression tests (80 passing at handoff). Passwords and documents moved into a local encrypted vault that is checked before the model sees a message, so a secret never reaches a prompt, the memory or a log. External tools come in through an MCP client that runs as a subprocess with no API keys in its environment. Discord joined Slack as a second way to talk to her. She also got a local YouTube curator that keeps a history of my taste in SQLite, weighs my feedback and suggests one video per turn.
+
+![Abril answering a request for a science video with one pick and a short reason](../../../assets/work/abril-discord-youtube.png)
+
+*Asked for a science video, she picks one and says why it fits.*
 
 I built this version with OpenAI Codex. Working on the same codebase with two different agents taught me a lot about what each one needs in its instructions.
 
@@ -24,7 +32,7 @@ I built this version with OpenAI Codex. Working on the same codebase with two di
 
 In September the Pi stopped booting. I rescued its SSD through WSL and used the moment to change two things. Abril moved to my Windows laptop, and from pay-per-call API keys to my Claude subscription through the Claude Agent SDK. Her tools now run as an in-process MCP server and Claude Code's own shell and file tools are switched off, so she can only do what her tools allow. Tool loops stop at eight steps. A PowerShell launcher starts Docker, waits for Postgres, restarts her with backoff and removes API keys from the environment so the subscription is always the one in use.
 
-I also removed features on purpose. She no longer writes first, and she only speaks when I ask for audio. This is the version I use every day.
+I also removed features on purpose. The cover image shows the old proactive mode: a reminder about the next day and a video suggestion she sent without being asked. She no longer writes first, and she only speaks when I ask for audio. This is the version I use every day.
 
 ## What I took from it
 

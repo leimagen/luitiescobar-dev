@@ -157,6 +157,12 @@ const hasRepo = p.links.some((l) => l.href.includes('github.com'));
     background: var(--raised); color: var(--ink); white-space: nowrap;
   }
   .prose :global(a) { color: var(--ink); border-bottom: 1px solid var(--line-2); }
+  .prose :global(p:has(> img)) { margin-top: 32px; }
+  .prose :global(img) { width: 100%; height: auto; border-radius: 14px; border: 1px solid var(--line); }
+  /* an italic-only paragraph right after an image is its caption */
+  .prose :global(p:has(> img) + p:has(> em:only-child)) { margin-top: 10px; font-size: 14px; color: var(--muted); }
+  .prose :global(p:has(> img) + p > em:only-child) { font-style: normal; }
+  .prose :global(p:has(> img) + p:has(> em:only-child) + p) { margin-top: 28px; }
   .prose :global(ul) { margin-top: 16px; padding-left: 1.1em; color: var(--ink-2); display: grid; gap: 6px; }
 
   .rail { display: grid; gap: 28px; align-content: start; }
